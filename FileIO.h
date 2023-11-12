@@ -11,9 +11,9 @@ using namespace std;
 
 class FileIO{
 public:
-    static Line* generateLine(vector<int>& d, bool isRow, int id, bool exist){
+    static Line generateLine(vector<int>& d, bool isRow, int id){
         string s =  "X" + string(N, 'u');
-        Line* line = new Line(s, d, isRow, id, exist);
+        Line line = Line(s, d, isRow, id);
         return line;
     };
     static vector<int> make_des(string& str){
@@ -26,19 +26,19 @@ public:
         return res;
     }
 
-    static void loadCase(ifstream& inputFile, string& str, queue<Line*>& q, vector<Line*>& rows, vector<Line*>& cols ){
+    static void loadCase(ifstream& inputFile, string& str, queue<Line>& q, vector<Line>& rows, vector<Line>& cols ){
         for(int i = 0; i < 50; i++){
             getline(inputFile, str);
             vector<int> d = make_des(str);
-            if(i < 25){    // generate row
-                Line* line = generateLine(d, true, i, true);
-                q.push(line);    
-                rows[i] = line;
-            }
-            else{       // generate col
-                Line* line = generateLine(d, false, i - 25, true);
+            if(i < 25){    // generate col
+                Line line = generateLine(d, false, i);
                 q.push(line);
-                cols[i-25] = line;
+                cols[i] = line;
+            }
+            else{       // generate row
+                Line line = generateLine(d, true, i - 25);
+                q.push(line);    
+                rows[i-25] = line;
             }
         }
     };

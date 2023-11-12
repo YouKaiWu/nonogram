@@ -9,12 +9,11 @@
 using namespace std;
 class Line{  
 public:
-    Line(string s, vector<int> d, bool isRow, int id, int exist){
+    Line(string s, vector<int> d, bool isRow, int id){
         this->s = s;
         this->d = d;
         this->isRow = isRow;
         this->id = id;
-        this->exist = exist;
     };
 
     Line() {}
@@ -23,7 +22,6 @@ public:
     string s;
     bool isRow;
     int id;
-    bool exist;
 
 
     // bool fix(int, int);
