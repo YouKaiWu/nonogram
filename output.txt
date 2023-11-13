@@ -1,36 +1,27 @@
-0 0
-1
-0 0
-1
-0 0
-1
-0 0
-1
-0 0
-1
-1 1
+2
 0 1 0 0 0 1 1 1 0 1 1 0 1 1 0 1 0 1 1 1 1 0 0 0 0 
-1 1 1 1 1 0 1 0 0 1 1 1 1 1 1 0 1 0 1 0 1 0 u 1 u 
+1 1 1 1 1 0 1 0 0 1 1 1 1 1 1 0 1 0 1 0 1 0 1 1 1 
 0 1 0 1 1 1 1 0 1 1 0 0 0 0 0 1 0 0 1 0 1 1 0 0 0 
 1 0 0 0 1 0 1 1 1 1 1 1 1 0 1 1 1 1 1 1 1 0 0 0 0 
-1 0 0 0 1 1 0 1 0 0 1 0 1 0 0 0 0 1 1 1 0 u 1 1 u 
-1 1 1 1 1 0 u 0 u u 0 u 0 1 1 1 1 1 0 1 0 u u 0 u 
-0 0 0 0 0 u u u u u 1 u u 0 1 0 0 1 0 0 u u u u u 
-u u u u u u u u u u 0 u u u 0 u u 1 u u u u u u u 
-u 1 u u 1 u u u u u 0 u u u u u u 0 u u u u u u u 
-u u u u 1 u u u u u 1 1 u u u u u u u u u u u u u 
-1 0 u u 1 u u u u u 0 u u u u u u u u u u u u u u 
-1 0 u u u u u 1 u u u u u u u u u u u u u u u u u 
-1 1 1 1 0 0 u 1 1 u u u u u u u u u u u u u u u u 
-1 0 u u u u u u u u u u u u 1 u u u u u u u u u u 
-u u u u u u u u u u u u u u u u u u u u u u u u u 
-u u u u u u u u u u u u u u u u u u u u u u u u u 
-u u u u u u u u u u u u u u u u u u u u u u u u u 
-u u u u u u u u u u u 0 u u u u u u u u u u u u u 
-u u u u u u u u u u u 1 u u u u u 1 u u u u u u u 
-u u u u u u u 1 u u u 1 u u u u u u u u 0 u u u u 
-u u u u u u u u u u u 1 u u u u u u u u 1 0 0 u u 
-u u u u u u u 0 0 u 0 1 u u 0 u u u u 0 1 1 1 0 0 
-u u 1 u u 0 u 0 1 0 u 1 u u 1 u u u 0 0 0 1 1 1 1 
-u u u u u 1 u 0 1 1 0 1 0 0 0 0 0 0 1 1 1 0 1 0 1 
-u u 0 u u 0 u 0 0 1 0 1 0 0 0 1 1 1 1 0 1 1 1 1 0 
+1 0 0 0 1 1 0 1 0 0 1 0 1 0 0 0 0 1 1 1 0 1 1 1 1 
+1 1 1 1 1 0 1 0 1 1 0 0 0 1 1 1 1 1 0 1 0 u 0 0 u 
+0 0 0 0 0 0 0 1 1 0 1 1 1 0 1 0 0 1 0 0 u u u u u 
+u u u u u u u 0 0 u 0 1 0 u 0 u u 1 u u u u u u u 
+u 1 u u 1 u u u u u 0 0 u u u u u 0 u u u u u u u 
+u u u u 1 u u u u u 1 1 u u u u u u u u u u u 0 u 
+1 0 u u 1 u u u u u 0 0 u u u u u u u u u u 0 1 1 
+1 0 u u u u u u u u u u u u u u u u u u u u u u u 
+1 1 1 1 0 u u u u u u u u u u u u u u u u u u u u 
+1 0 u u u u u u 1 u u u u u u u u u u u u u u u u 
+u u u u u u u u u u u u u u u u u u u u u u u 0 1 
+u u u u u u u u u u u u u u u u u u u u u u 0 1 1 
+u u u u u u u u u u u u u u u u u u u u 0 1 1 1 1 
+u u u u u u u u u u u u u u u u u u u u u u u 0 u 
+u u u u u u u u u u u 1 u u u u u 1 u u u u u 1 u 
+u u u u u u u u u u u 1 u u u u u u u u u u u 0 u 
+u u u u u u u u u u u 1 u u u u u u u u u u 0 1 0 
+u u u u u u u u u u u u u u u u u u u u 1 1 u 0 0 
+u u u u u u u u u u u u u u u u u u u u u 1 1 1 u 
+u u u u u u u u u u u u u u u u u u u u u u u 0 1 
+u u u u u u u u u u u u u u u u u u u u u 1 1 1 u 
+time_spent: 0.766 s

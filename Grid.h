@@ -8,8 +8,8 @@ class Grid
     
 
 public:
-    vector<Line> rows;
-    vector<Line> cols;
+    vector<Line*> rows;
+    vector<Line*> cols;
     State status;
 };
 #endif

@@ -9,11 +9,12 @@
 using namespace std;
 class Line{  
 public:
-    Line(string s, vector<int> d, bool isRow, int id){
+    Line(string s, vector<int> d, bool isRow, int id, bool exist){
         this->s = s;
         this->d = d;
         this->isRow = isRow;
         this->id = id;
+        this->exist = exist;
     };
 
     Line() {}
@@ -22,17 +23,8 @@ public:
     string s;
     bool isRow;
     int id;
+    bool exist;
 
-
-    // bool fix(int, int);
-    // bool fix0(int, int);
-    // bool fix1(int, int);
-    // bool match_sigma(int, int);
-
-    // string paint(int, int);
-    // string paint0(int, int);
-    // string paint1(int, int);
-    // string merge(const string&, const string&);
 
     bool fix(int i, int j){
         if(i == 0){

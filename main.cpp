@@ -2,37 +2,39 @@
 #include "FileIO.h"
 #include "Grid.h"
 #include <unordered_set>
+#include <time.h>
 using namespace std;
 
 
 
 Line generateLine(vector<int>&, bool, int);
-bool complete(vector<Line> &);
-void propagate(Grid& , queue<Line>&, bool&);
-void FP1(Grid& , queue<Line>&);
+bool complete(vector<Line*> &);
+void propagate(Grid& , queue<Line*>&, bool&);
+void FP1(Grid& , queue<Line*>&);
 void probe(Grid& , string , bool&);
-Grid probeG(Grid& , string , int , bool&);
+Grid probeG(Grid& , string , char , bool&);
 pair<int, int> getIdx(string );
-vector<Line> merge(Grid& , vector<Line>& , vector<Line>& , bool& );
-void backtracking(Grid& , queue<Line>& q);
+vector<Line*> merge(Grid& , vector<Line*>& , vector<Line*>& , bool& );
+void updatePixel(Grid& , string , char );
+void backtracking(Grid& , queue<Line*>& q);
 
 
-unordered_set<string> getUnpainted(Grid& g){  //* row_idx - col_idx 0-index
-    unordered_set<string> unpainted;
+vector<string> getUnpainted(Grid& g){  //* row_idx - col_idx 0-index
+    vector<string> unpainted;
     for(int i = 0; i < 25; i++){
         for(int j = 1; j <= 25; j++){
-            if(g.rows[i].s[j] == 'u'){
+            if(g.rows[i]->s[j] == 'u'){
                 string pixel = to_string(i) + "-" + to_string(j-1);
-                unpainted.insert(pixel); 
+                unpainted.push_back(pixel); 
             }
         }
     }
     return unpainted;
-}
+};
 
-void print(vector<Line>& rows){
+void print(vector<Line*>& rows){
     for(auto r: rows){
-        Line line = r;
+        Line& line = *r;
         for(auto& ch : line.s.substr(1)){
             cout << ch << " ";
         }
@@ -40,22 +42,29 @@ void print(vector<Line>& rows){
     }
 };
   
-
+// * 慢慢找去修改Propagate , fp1, backtracking
 int main() {
     ifstream inputFile("input.txt");
     string str; 
     if (inputFile.is_open()) {
+        int t = 1;
         while(getline(inputFile, str)){
+            clock_t start = clock();
             Grid g;
-            queue<Line> q; 
+            queue<Line*> q; 
             g.rows.resize(N);
             g.cols.resize(N);
             FileIO::loadCase(inputFile, str, q, g.rows, g.cols);
-            backtracking(g, q);
+            backtracking(g,q);
+            cout << static_cast<int>(g.status) << endl;
+            if(g.status == State:: SOLVED){
+                cout << "Case"<< t++ << ": Solved" << endl;
+            }
             print(g.rows);
-            g.rows.clear();
-            g.cols.clear();
-            break;
+            clock_t end = clock();
+            double time_spent = 0.0;
+            time_spent += (double)(end - start) / CLOCKS_PER_SEC;
+            cout << "time_spent: "<< time_spent << " s" << endl;
         }
         inputFile.close();
     } else {
@@ -67,9 +76,9 @@ int main() {
 
 
 
-bool complete(vector<Line>& rows){
+bool complete(vector<Line*>& rows){
     for(auto r: rows){
-        Line line = r;
+        Line& line = *r;
         for(int i = 1; i <= N; i++){
             if(line.s[i] == 'u')
                 return false;
@@ -78,53 +87,46 @@ bool complete(vector<Line>& rows){
     return true;
 };
 
-void propagate(Grid& g, queue<Line>& q, bool& update){
+void propagate(Grid& g, queue<Line*>& q, bool& update){
     while(!q.empty()){
-        Line cur = q.front();
+        Line* cur = q.front();
         q.pop();
-        if(!cur.fix(N,cur.d.size() - 1)){
-            g.status = State::CONFLICT;
+        (*cur).exist = false;
+        if(!(*cur).fix(N,(*cur).d.size() - 1)){
+            g.status = State:: CONFLICT;
             return;
         }
-        string origin = cur.s;
-        cur.s = "X" + cur.paint(N, cur.d.size() - 1); 
-        if(origin != cur.s){
+        string origin = (*cur).s;
+        (*cur).s = "X" + (*cur).paint(N, (*cur).d.size() - 1); 
+        if(origin != ((*cur).s)){
             for(int i = 1; i <= N; i++){
-                if(origin[i] != cur.s[i]){
-                    update = true;
-                    if(cur.isRow){
-                        g.cols[i-1].s[cur.id+1] = cur.s[i];
-                        q.push((g.cols[i-1]));
-                            
+                if(origin[i] != (*cur).s[i]){
+                    if((*cur).isRow){
+                        (*(g.cols[i-1])).s[(*cur).id+1] = (*cur).s[i];
+                        if(!(*(g.cols[i-1])).exist) {
+                            q.push((g.cols[i-1]));
+                            (*(g.cols[i-1])).exist = true;
+                        }
+
                     }else{
-                        g.rows[i-1].s[cur.id+1] = cur.s[i];
-                        q.push((g.rows[i-1]));
-                    }
-                }
-            }
-            if(cur.isRow){
-                for(int i = 1; i <= N; i++){
-                    if(cur.s[i] != 'u'){
-                        g.rows[cur.id].s[i] = cur.s[i];
-                    }
-                }
-            }else{
-                for(int i = 1; i <= N; i++){
-                    if(cur.s[i] != 'u'){
-                        g.cols[cur.id].s[i] = cur.s[i];
+                        (*(g.rows[i-1])).s[(*cur).id+1] = (*cur).s[i];
+                        if(!(*(g.rows[i-1])).exist) {
+                            q.push((g.rows[i-1]));
+                            (*(g.rows[i-1])).exist = true;
+                        }
                     }
                 }
             }
         }
     }   
     if(complete(g.rows)){
-        g.status = State::SOLVED;
+        g.status = State:: SOLVED;
     }else{
-        g.status = State::INCOMPLETE;
+        g.status = State:: INCOMPLETE;
     }
 };
 
-void FP1(Grid& g, queue<Line>& q){
+void FP1(Grid& g, queue<Line*>& q){
     bool update = false;
     do{
         update = false;
@@ -147,9 +149,8 @@ void FP1(Grid& g, queue<Line>& q){
 
 void probe(Grid& g, string pixel, bool& update){
     bool update_zero = false, update_one = false;
-    Grid GP0 = probeG(g, pixel, 0, update_zero);
-    Grid GP1 = probeG(g, pixel, 1, update_one);
-    cout << (GP0.status == State::CONFLICT)<< " " << (GP1.status == State::CONFLICT) << endl;
+    Grid GP0 = probeG(g, pixel, '0', update_zero);
+    Grid GP1 = probeG(g, pixel, '1', update_one);
     if(GP0.status == State::CONFLICT && GP1.status == State::CONFLICT){
         g.status = State::CONFLICT;
         return;
@@ -162,10 +163,8 @@ void probe(Grid& g, string pixel, bool& update){
         g.cols = GP0.cols;
         update = update_zero;
     }else{
-        bool update_merge = false;
-        g.rows = merge(g, GP0.rows, GP1.rows, update_merge);
-        g.cols = merge(g, GP0.cols, GP1.cols, update_merge);
-        update = update_merge;
+        g.rows = merge(g, GP0.rows, GP1.rows, update);
+        g.cols = merge(g, GP0.cols, GP1.cols, update);
     }
     
     if(update){
@@ -175,15 +174,17 @@ void probe(Grid& g, string pixel, bool& update){
     }
 };
 
-
-Grid probeG(Grid& g, string pixel, int filled, bool& update){ 
+// * 這邊複製要建新的指標，要改寫
+Grid probeG(Grid& g, string pixel, char filled, bool& update){ 
     Grid newG = g;
-    queue<Line> q;
     pair<int, int> idx = getIdx(pixel);
     int row_idx = idx.first;
     int col_idx = idx.second;
-    newG.rows[row_idx].s[col_idx+1] = filled - '0';
-    newG.cols[col_idx].s[row_idx+1] = filled - '0';
+    newG.rows[row_idx]->s[col_idx+1] = filled;
+    newG.rows[row_idx]->exist = true;
+    newG.cols[col_idx]->s[row_idx+1] = filled;
+    newG.cols[col_idx]->exist = true;
+    queue<Line*> q;
     q.push(newG.rows[row_idx]);
     q.push(newG.cols[col_idx]);
     propagate(newG, q, update);
@@ -207,17 +208,17 @@ pair<int, int> getIdx(string pixel){
 };
 
 
-vector<Line> merge(Grid& g ,vector<Line>& filled_zero, vector<Line>& filled_one, bool& update_merge){
-    vector<Line> merged(25);
-    if(filled_one[0].isRow){
+vector<Line*> merge(Grid& g ,vector<Line*>& filled_zero, vector<Line*>& filled_one, bool& update_merge){
+    vector<Line*> merged(25);
+    if(filled_one[0]->isRow){
         merged = g.rows;
     }else{
         merged = g.cols;
     }
     for(int i = 0; i < 25; i++){
         for(int j = 1; j <= 25; j++){
-            if(merged[i].s[j] == 'u' && filled_one[i].s[j] != 'u' && filled_one[i].s[j] == filled_zero[i].s[j]){
-                merged[i].s[j] = filled_one[i].s[j];
+            if(merged[i]->s[j] == 'u' && filled_one[i]->s[j] == filled_zero[i]->s[j] && filled_one[i]->s[j] != 'u' ){
+                merged[i]->s[j] = filled_one[i]->s[j];
                 update_merge = true;
             }
         }
@@ -225,7 +226,15 @@ vector<Line> merge(Grid& g ,vector<Line>& filled_zero, vector<Line>& filled_one,
     return merged;
 };
 
-void backtracking(Grid& g, queue<Line>& q){
+void updatePixel(Grid& g, string pixel, char filled){ 
+    pair<int, int> idx = getIdx(pixel);
+    int row_idx = idx.first;
+    int col_idx = idx.second;
+    g.rows[row_idx]->s[col_idx+1] = filled;
+    g.cols[col_idx]->s[row_idx+1] = filled;
+};
+
+void backtracking(Grid& g, queue<Line*>& q){
     FP1(g, q);
     if(g.status == State::CONFLICT){
         return;
@@ -235,9 +244,9 @@ void backtracking(Grid& g, queue<Line>& q){
     }
     bool update = false;
     for(auto& pixel: getUnpainted(g)){
-        Grid GP0 = probeG(g, pixel, 0, update);
-        backtracking(GP0, q);
-        Grid GP1 = probeG(g, pixel, 1, update);
-        backtracking(GP1, q);
+        updatePixel(g, pixel, '0');
+        backtracking(g, q);
+        updatePixel(g, pixel, '1');
+        backtracking(g, q);
     }
 }
