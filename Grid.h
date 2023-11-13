@@ -1,5 +1,6 @@
 #ifndef GRID_H
 #define GRID_H
+
 #include "State.h"
 #include "Line.h"
 

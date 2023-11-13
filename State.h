@@ -8,4 +8,5 @@ enum class State
     CONFLICT,
     PAINTED
 };
+
 #endif

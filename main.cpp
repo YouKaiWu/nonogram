@@ -1,11 +1,8 @@
-#define N 25
-#include "FileIO.h"
+#include "FileInput.h"
 #include "Grid.h"
+
 #include <unordered_set>
 #include <time.h>
-using namespace std;
-
-
 
 Line generateLine(vector<int>&, bool, int);
 bool complete(vector<Line*> &);
@@ -17,7 +14,6 @@ pair<int, int> getIdx(string );
 vector<Line*> merge(Grid& , vector<Line*>& , vector<Line*>& , bool& );
 void updatePixel(Grid& , string , char );
 void backtracking(Grid& , queue<Line*>& q);
-
 
 vector<string> getUnpainted(Grid& g){  //* row_idx - col_idx 0-index
     vector<string> unpainted;
@@ -42,7 +38,6 @@ void print(vector<Line*>& rows){
     }
 };
   
-// * 慢慢找去修改Propagate , fp1, backtracking
 int main() {
     ifstream inputFile("input.txt");
     string str; 
@@ -54,17 +49,15 @@ int main() {
             queue<Line*> q; 
             g.rows.resize(N);
             g.cols.resize(N);
-            FileIO::loadCase(inputFile, str, q, g.rows, g.cols);
+            FileInput::loadCase(inputFile, str, q, g.rows, g.cols);
             backtracking(g,q);
-            cout << static_cast<int>(g.status) << endl;
-            if(g.status == State:: SOLVED){
-                cout << "Case"<< t++ << ": Solved" << endl;
-            }
-            print(g.rows);
             clock_t end = clock();
             double time_spent = 0.0;
             time_spent += (double)(end - start) / CLOCKS_PER_SEC;
-            cout << "time_spent: "<< time_spent << " s" << endl;
+            if(g.status == State:: SOLVED){
+                cout << "Case"<< t++ << ": Solved; time_spent: "<< time_spent << " s" << endl;
+            }
+            print(g.rows);
         }
         inputFile.close();
     } else {
@@ -72,9 +65,6 @@ int main() {
     }
     return 0;
 }
-
-
-
 
 bool complete(vector<Line*>& rows){
     for(auto r: rows){
@@ -146,7 +136,6 @@ void FP1(Grid& g, queue<Line*>& q){
     }while(update);
 };
 
-
 void probe(Grid& g, string pixel, bool& update){
     bool update_zero = false, update_one = false;
     Grid GP0 = probeG(g, pixel, '0', update_zero);
@@ -174,9 +163,26 @@ void probe(Grid& g, string pixel, bool& update){
     }
 };
 
-// * 這邊複製要建新的指標，要改寫
+Grid copyG(Grid& g){
+    Grid newG;
+    newG.status = g.status;
+    vector<Line*> rows(25);
+    vector<Line*> cols(25);
+    for(int i = 0; i < 25; i++){
+        Line* line = new Line(g.rows[i]->s, g.rows[i]->d, g.rows[i]->isRow, g.rows[i]->id, g.rows[i]->exist);
+        rows[i] = line;
+    }
+    for(int i = 0; i < 25; i++){
+        Line* line = new Line(g.cols[i]->s, g.cols[i]->d, g.cols[i]->isRow, g.cols[i]->id, g.cols[i]->exist);
+        cols[i] = line;
+    }
+    newG.rows = rows;
+    newG.cols = cols;
+    return newG;
+};
+
 Grid probeG(Grid& g, string pixel, char filled, bool& update){ 
-    Grid newG = g;
+    Grid newG = copyG(g);
     pair<int, int> idx = getIdx(pixel);
     int row_idx = idx.first;
     int col_idx = idx.second;
@@ -206,7 +212,6 @@ pair<int, int> getIdx(string pixel){
     }
     return idx;
 };
-
 
 vector<Line*> merge(Grid& g ,vector<Line*>& filled_zero, vector<Line*>& filled_one, bool& update_merge){
     vector<Line*> merged(25);

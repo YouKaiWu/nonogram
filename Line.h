@@ -1,12 +1,12 @@
 #ifndef LINE_H
 #define LINE_H
 
-
 #include <iostream>
 #include <vector>
 #include <string>
 
 using namespace std;
+
 class Line{  
 public:
     Line(string s, vector<int> d, bool isRow, int id, bool exist){
@@ -24,7 +24,6 @@ public:
     bool isRow;
     int id;
     bool exist;
-
 
     bool fix(int i, int j){
         if(i == 0){

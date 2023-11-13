@@ -1,15 +1,15 @@
-#ifndef FILEIO_H
-#define FILEIO_H
+#ifndef FILEINPUT_H
+#define FILEINPUT_H
 
+#define N 25
 
 #include "Line.h"
+
 #include <fstream>
 #include <sstream>
 #include <queue>
 
-using namespace std;
-
-class FileIO{
+class FileInput{
 public:
     static Line* generateLine(vector<int>& d, bool isRow, int id, bool exist){
         string s =  "X" + string(N, 'u');
