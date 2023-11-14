@@ -42,8 +42,8 @@ int main() {
     ifstream inputFile("input.txt");
     string str; 
     if (inputFile.is_open()) {
-        int t = 1;
         while(getline(inputFile, str)){
+            string test_case = str;
             clock_t start = clock();
             Grid g;
             queue<Line*> q; 
@@ -55,7 +55,7 @@ int main() {
             double time_spent = 0.0;
             time_spent += (double)(end - start) / CLOCKS_PER_SEC;
             if(g.status == State:: SOLVED){
-                cout << "Case "<< t++ << ": Solved; time_spent: "<< time_spent << " s" << endl;
+                cout << "Case "<< test_case << ": Solved; time_spent: "<< time_spent << " s" << endl;
             }
             print(g.rows);
         }
@@ -137,25 +137,23 @@ void FP1(Grid& g, queue<Line*>& q){
 };
 
 void probe(Grid& g, string pixel, bool& update){
-    bool update_zero = false, update_one = false;
-    Grid GP0 = probeG(g, pixel, '0', update_zero);
-    Grid GP1 = probeG(g, pixel, '1', update_one);
+    Grid GP0 = probeG(g, pixel, '0', update);
+    Grid GP1 = probeG(g, pixel, '1', update);
     if(GP0.status == State::CONFLICT && GP1.status == State::CONFLICT){
         g.status = State::CONFLICT;
         return;
     }else if(GP0.status == State::CONFLICT){
         g.rows = GP1.rows;
         g.cols = GP1.cols;
-        update = update_one;
+        update = true;
     }else if(GP1.status == State::CONFLICT){
         g.rows = GP0.rows;
         g.cols = GP0.cols;
-        update = update_zero;
+        update = true;
     }else{
         g.rows = merge(g, GP0.rows, GP1.rows, update);
         g.cols = merge(g, GP0.cols, GP1.cols, update);
     }
-    
     if(update){
         g.status = State:: PAINTED;
     }else{
