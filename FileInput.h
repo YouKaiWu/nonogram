@@ -27,7 +27,7 @@ public:
     }
 
     static void loadCase(ifstream& inputFile, string& str, queue<Line*>& q, vector<Line*>& rows, vector<Line*>& cols ){
-        for(int i = 0; i < 50; i++){
+        for(int i = 0; i < N * 2; i++){
             getline(inputFile, str);
             vector<int> d = make_des(str);
             if(i < 25){    // generate col

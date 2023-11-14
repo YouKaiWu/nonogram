@@ -55,7 +55,7 @@ int main() {
             double time_spent = 0.0;
             time_spent += (double)(end - start) / CLOCKS_PER_SEC;
             if(g.status == State:: SOLVED){
-                cout << "Case"<< t++ << ": Solved; time_spent: "<< time_spent << " s" << endl;
+                cout << "Case "<< t++ << ": Solved; time_spent: "<< time_spent << " s" << endl;
             }
             print(g.rows);
         }
@@ -247,11 +247,10 @@ void backtracking(Grid& g, queue<Line*>& q){
     if(g.status == State::SOLVED){
         return;
     }
-    bool update = false;
     for(auto& pixel: getUnpainted(g)){
         updatePixel(g, pixel, '0');
         backtracking(g, q);
         updatePixel(g, pixel, '1');
         backtracking(g, q);
     }
-}
+};
