@@ -30,15 +30,15 @@ public:
         for(int i = 0; i < N * 2; i++){
             getline(inputFile, str);
             vector<int> d = make_des(str);
-            if(i < 25){    // generate col
+            if(i < N){    // generate col
                 Line* line = generateLine(d, false, i, true);
                 q.push(line);
                 cols[i] = line;
             }
             else{       // generate row
-                Line* line = generateLine(d, true, i - 25, true);
+                Line* line = generateLine(d, true, i - N, true);
                 q.push(line);    
-                rows[i-25] = line;
+                rows[i-N] = line;
             }
         }
     };

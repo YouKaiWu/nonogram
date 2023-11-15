@@ -17,8 +17,8 @@ void backtracking(Grid& , queue<Line*>& q);
 
 vector<string> getUnpainted(Grid& g){  //* row_idx - col_idx 0-index
     vector<string> unpainted;
-    for(int i = 0; i < 25; i++){
-        for(int j = 1; j <= 25; j++){
+    for(int i = 0; i < N; i++){
+        for(int j = 1; j <= N; j++){
             if(g.rows[i]->s[j] == 'u'){
                 string pixel = to_string(i) + "-" + to_string(j-1);
                 unpainted.push_back(pixel); 
@@ -57,7 +57,7 @@ int main() {
             if(g.status == State:: SOLVED){
                 cout << "Case "<< test_case << ": Solved; time_spent: "<< time_spent << " s" << endl;
             }
-            print(g.rows);
+            // print(g.rows);
         }
         inputFile.close();
     } else {
@@ -87,7 +87,7 @@ void propagate(Grid& g, queue<Line*>& q, bool& update){
             return;
         }
         string origin = cur.s;
-        cur.s = "X" + cur.paint(N, cur.d.size() - 1); 
+        cur.s = cur.paint(N, cur.d.size() - 1); 
         if(origin != cur.s){
             for(int i = 1; i <= N; i++){
                 if(origin[i] != cur.s[i]){
@@ -164,13 +164,13 @@ void probe(Grid& g, string pixel, bool& update){
 Grid copyG(Grid& g){
     Grid newG;
     newG.status = g.status;
-    vector<Line*> rows(25);
-    vector<Line*> cols(25);
-    for(int i = 0; i < 25; i++){
+    vector<Line*> rows(N);
+    vector<Line*> cols(N);
+    for(int i = 0; i < N; i++){
         Line* line = new Line(g.rows[i]->s, g.rows[i]->d, g.rows[i]->isRow, g.rows[i]->id, g.rows[i]->exist);
         rows[i] = line;
     }
-    for(int i = 0; i < 25; i++){
+    for(int i = 0; i < N; i++){
         Line* line = new Line(g.cols[i]->s, g.cols[i]->d, g.cols[i]->isRow, g.cols[i]->id, g.cols[i]->exist);
         cols[i] = line;
     }
@@ -212,14 +212,14 @@ pair<int, int> getIdx(string pixel){
 };
 
 vector<Line*> merge(Grid& g ,vector<Line*>& filled_zero, vector<Line*>& filled_one, bool& update_merge){
-    vector<Line*> merged(25);
+    vector<Line*> merged(N);
     if(filled_one[0]->isRow){
         merged = g.rows;
     }else{
         merged = g.cols;
     }
-    for(int i = 0; i < 25; i++){
-        for(int j = 1; j <= 25; j++){
+    for(int i = 0; i < N; i++){
+        for(int j = 1; j <= N; j++){
             if(merged[i]->s[j] == 'u' && filled_one[i]->s[j] == filled_zero[i]->s[j] && filled_one[i]->s[j] != 'u' ){
                 merged[i]->s[j] = filled_one[i]->s[j];
                 update_merge = true;

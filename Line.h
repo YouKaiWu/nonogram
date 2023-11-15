@@ -66,7 +66,7 @@ public:
 
     string paint(int i, int j){
         if(i == 0)
-            return "";
+            return "X";
         if(fix0(i, j) && !fix1(i, j)){
             return paint0(i, j);
         }else if(!fix0(i, j) && fix1(i, j)){
