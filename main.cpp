@@ -79,30 +79,30 @@ bool complete(vector<Line*>& rows){
 
 void propagate(Grid& g, queue<Line*>& q, bool& update){
     while(!q.empty()){
-        Line* cur = q.front();
+        Line& cur = *(q.front());
         q.pop();
-        (*cur).exist = false;
-        if(!(*cur).fix(N,(*cur).d.size() - 1)){
+        cur.exist = false;
+        if(!cur.fix(N,cur.d.size() - 1)){
             g.status = State:: CONFLICT;
             return;
         }
-        string origin = (*cur).s;
-        (*cur).s = "X" + (*cur).paint(N, (*cur).d.size() - 1); 
-        if(origin != ((*cur).s)){
+        string origin = cur.s;
+        cur.s = "X" + cur.paint(N, cur.d.size() - 1); 
+        if(origin != cur.s){
             for(int i = 1; i <= N; i++){
-                if(origin[i] != (*cur).s[i]){
-                    if((*cur).isRow){
-                        (*(g.cols[i-1])).s[(*cur).id+1] = (*cur).s[i];
-                        if(!(*(g.cols[i-1])).exist) {
+                if(origin[i] != cur.s[i]){
+                    if(cur.isRow){
+                        g.cols[i-1]->s[cur.id+1] = cur.s[i];
+                        if(!g.cols[i-1]->exist) {
                             q.push((g.cols[i-1]));
-                            (*(g.cols[i-1])).exist = true;
+                            g.cols[i-1]->exist = true;
                         }
 
                     }else{
-                        (*(g.rows[i-1])).s[(*cur).id+1] = (*cur).s[i];
-                        if(!(*(g.rows[i-1])).exist) {
+                        g.rows[i-1]->s[cur.id+1] = cur.s[i];
+                        if(!g.rows[i-1]->exist) {
                             q.push((g.rows[i-1]));
-                            (*(g.rows[i-1])).exist = true;
+                            g.rows[i-1]->exist = true;
                         }
                     }
                 }
