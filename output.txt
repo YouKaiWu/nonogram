@@ -1,17 +1,22 @@
-Case $1: Solved; time_spent: 0.501 s
-Case $2: Solved; time_spent: 0.106 s
-Case $3: Solved; time_spent: 0.381 s
-Case $4: Solved; time_spent: 0.3 s
-Case $5: Solved; time_spent: 1.722 s
-Case $6: Solved; time_spent: 0.369 s
-Case $7: Solved; time_spent: 1.074 s
-Case $8: Solved; time_spent: 1.307 s
-Case $9: Solved; time_spent: 1.331 s
+Case $1: Solved; time_spent: 0.514 s
+1
+Case $2: Solved; time_spent: 0.122 s
+1
+Case $3: Solved; time_spent: 0.435 s
+1
+Case $4: Solved; time_spent: 0.245 s
+1
+Case $5: Solved; time_spent: 1.8 s
+1
+Case $6: Solved; time_spent: 0.415 s
+1
+Case $7: Solved; time_spent: 1.251 s
+1
+Case $8: Solved; time_spent: 1.358 s
+1
+Case $9: Solved; time_spent: 1.227 s
+1
 Case $10: Solved; time_spent: 0.067 s
-Case $11: Solved; time_spent: 0.726 s
-Case $12: Solved; time_spent: 3.263 s
-Case $13: Solved; time_spent: 3.192 s
-Case $14: Solved; time_spent: 28.568 s
-Case $15: Solved; time_spent: 9.131 s
-Case $16: Solved; time_spent: 0.745 s
-Case $17: Solved; time_spent: 0.688 s
+1
+Case $11: Solved; time_spent: 0.776 s
+1

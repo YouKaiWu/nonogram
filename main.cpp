@@ -5,7 +5,6 @@
 #include <time.h>
 
 Line generateLine(vector<int>&, bool, int);
-bool complete(vector<Line*> &);
 void propagate(Grid& , queue<Line*>&, bool&);
 void FP1(Grid& , queue<Line*>&);
 void probe(Grid& , string , bool&);
@@ -37,7 +36,33 @@ void print(vector<Line*>& rows){
         cout << endl;
     }
 };
-  
+
+bool isSolved(vector<Line*>& rows){
+    for(auto r: rows){
+        Line& line = *r;
+        vector<int> actual;
+        actual.push_back(-1);
+        int cnt = 0;
+        for(int i = 1; i <= N; i++){
+            if(line.s[i] == '1'){
+                cnt++;
+            }else{
+                if(cnt != 0)
+                    actual.push_back(cnt);
+                cnt = 0;
+            }
+        }
+        if(cnt != 0)
+            actual.push_back(cnt);
+        for(int i = 1; i < line.d.size(); i++){
+            if(line.d[i] != actual[i])
+                return false;
+        }
+        
+    }
+    return true;
+};
+
 int main() {
     ifstream inputFile("input.txt");
     string str; 
@@ -54,9 +79,9 @@ int main() {
             clock_t end = clock();
             double time_spent = 0.0;
             time_spent += (double)(end - start) / CLOCKS_PER_SEC;
-            if(g.status == State:: SOLVED){
+            if(g.status == State:: SOLVED)
                 cout << "Case "<< test_case << ": Solved; time_spent: "<< time_spent << " s" << endl;
-            }
+            // cout << isSolved(g.rows) << endl;
             // print(g.rows);
         }
         inputFile.close();
@@ -66,16 +91,6 @@ int main() {
     return 0;
 }
 
-bool complete(vector<Line*>& rows){
-    for(auto r: rows){
-        Line& line = *r;
-        for(int i = 1; i <= N; i++){
-            if(line.s[i] == 'u')
-                return false;
-        }
-    }
-    return true;
-};
 
 void propagate(Grid& g, queue<Line*>& q, bool& update){
     while(!q.empty()){
@@ -109,11 +124,10 @@ void propagate(Grid& g, queue<Line*>& q, bool& update){
             }
         }
     }   
-    if(complete(g.rows)){
+    if(isSolved(g.rows))
         g.status = State:: SOLVED;
-    }else{
+    else
         g.status = State:: INCOMPLETE;
-    }
 };
 
 void FP1(Grid& g, queue<Line*>& q){
@@ -121,17 +135,14 @@ void FP1(Grid& g, queue<Line*>& q){
     do{
         update = false;
         propagate(g, q, update);
-        if(g.status == State::CONFLICT || g.status == State::SOLVED){
+        if(g.status == State::CONFLICT || g.status == State::SOLVED)
             return;
-        }
         for(auto& pixel: getUnpainted(g)){  
             probe(g, pixel, update);
-            if(g.status == State::CONFLICT || g.status == State::SOLVED){
+            if(g.status == State::CONFLICT || g.status == State::SOLVED)
                 return;
-            }
-            if(g.status == State::PAINTED){
+            if(g.status == State::PAINTED)
                 break;
-            }
         }
     }while(update);
 };
@@ -154,11 +165,10 @@ void probe(Grid& g, string pixel, bool& update){
         g.rows = merge(g, GP0.rows, GP1.rows, update);
         g.cols = merge(g, GP0.cols, GP1.cols, update);
     }
-    if(update){
+    if(update)
         g.status = State:: PAINTED;
-    }else{
+    else
         g.status = State:: INCOMPLETE;
-    }
 };
 
 Grid copyG(Grid& g){
@@ -201,11 +211,10 @@ pair<int, int> getIdx(string pixel){
     int i = 0;
     pair<int, int> idx;
     while(getline(ss, token, '-')){
-        if(i == 0){
+        if(i == 0)
             idx.first = stoi(token);
-        }else{
+        else
             idx.second = stoi(token);
-        }
         i++;
     }
     return idx;
@@ -239,15 +248,15 @@ void updatePixel(Grid& g, string pixel, char filled){
 
 void backtracking(Grid& g, queue<Line*>& q){
     FP1(g, q);
-    if(g.status == State::CONFLICT){
+    if(g.status == State::CONFLICT)
         return;
-    }
-    if(g.status == State::SOLVED){
+    if(g.status == State::SOLVED)
         return;
-    }
     for(auto& pixel: getUnpainted(g)){
         updatePixel(g, pixel, '0');
         backtracking(g, q);
+        if(g.status == State::SOLVED)
+            return;
         updatePixel(g, pixel, '1');
         backtracking(g, q);
     }
