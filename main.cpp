@@ -28,7 +28,7 @@ vector<string> getUnpainted(Grid& g){  //* row_idx - col_idx 0-index
 };
 
 void print(vector<Line*>& rows){
-    for(auto r: rows){
+    for(auto& r: rows){
         Line& line = *r;
         for(auto& ch : line.s.substr(1)){
             cout << ch << " ";
@@ -36,9 +36,18 @@ void print(vector<Line*>& rows){
         cout << endl;
     }
 };
-
+bool isCompleted(vector<Line*>& rows){
+    for(auto& r: rows){
+        Line& line = *r;
+        for(int i = 1; i <= N; i++){
+            if(line.s[i] == 'u')
+                return false;
+        }
+    }
+    return true;
+};
 bool isSolved(vector<Line*>& rows){
-    for(auto r: rows){
+    for(auto& r: rows){
         Line& line = *r;
         vector<int> actual;
         actual.push_back(-1);
@@ -124,7 +133,7 @@ void propagate(Grid& g, queue<Line*>& q, bool& update){
             }
         }
     }   
-    if(isSolved(g.rows))
+    if(isCompleted(g.rows))
         g.status = State:: SOLVED;
     else
         g.status = State:: INCOMPLETE;
