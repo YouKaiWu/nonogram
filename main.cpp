@@ -3,6 +3,7 @@
 
 #include <unordered_set>
 #include <time.h>
+#include <iomanip>
 
 Line generateLine(vector<int>&, bool, int);
 void propagate(Grid& , queue<Line*>&, bool&);
@@ -77,7 +78,7 @@ int main() {
     string str; 
     if (inputFile.is_open()) {
         while(getline(inputFile, str)){
-            string test_case = str;
+            string test_case = str.substr(1);
             clock_t start = clock();
             Grid g;
             queue<Line*> q; 
@@ -88,10 +89,13 @@ int main() {
             clock_t end = clock();
             double time_spent = 0.0;
             time_spent += (double)(end - start) / CLOCKS_PER_SEC;
-            if(g.status == State:: SOLVED)
-                cout << "Case "<< test_case << ": Solved; time_spent: "<< time_spent << " s" << endl;
-            // cout << isSolved(g.rows) << endl;
-            // print(g.rows);
+            if(g.status == State:: SOLVED){
+                cout << "Case$" << setw(3) << setfill('0') << test_case << endl; 
+                cout << "\ttime_spent: " << fixed << setprecision(3) << time_spent << " s";
+            }
+            if(isSolved(g.rows))
+                cout << "; Solved" << endl;
+            print(g.rows);
         }
         inputFile.close();
     } else {
